@@ -54,10 +54,18 @@ app.patch("/assignments/:id", async (req, res) => {
       [id]
     );
 
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        message: "Assignment not found",
+      });
+    }
+
     res.json(result.rows[0]);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({
+      message: "Internal server error",
+    });
   }
 });
 
