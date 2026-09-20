@@ -23,9 +23,20 @@ app.post("/assignments", async (req, res) => {
 
 app.get("/assignments", async (req, res) => {
   try {
-    const result = await pool.query(
-      "SELECT * FROM assignments ORDER BY id DESC"
-    );
+    const { submitted } = req.query;
+
+    let result;
+
+    if (submitted === "true") {
+      result = await pool.query(
+        "SELECT * FROM assignments WHERE submitted = $1 ORDER BY id DESC",
+        [true]
+      );
+    } else {
+      result = await pool.query(
+        "SELECT * FROM assignments ORDER BY id DESC"
+      );
+    }
 
     res.json(result.rows);
   } catch (error) {
